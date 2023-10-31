@@ -1,4 +1,4 @@
-package com.voterManagement.work.voterCardManagement.controller;
+package com.voterManagement.work.voterCardManagement.controller.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

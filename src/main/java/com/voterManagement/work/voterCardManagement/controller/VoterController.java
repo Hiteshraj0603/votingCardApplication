@@ -99,4 +99,52 @@ public class VoterController {
     public List<Voter> getVoterListByStateApi(@PathVariable("name") String name){
         return voterService.getVoterByStateName(name);
     }
+
+    @ResponseBody
+    @DeleteMapping("/deleteVoter/{id}")
+    public String deleteVoter(@PathVariable("id")Integer id){
+        try {
+
+            if (voterDao.existsById(id)) {
+
+                voterDao.deleteById(id);
+                return "Voter with ID " + id + " deleted successfully";
+            } else {
+                return "Voter with ID " + id + " not found";
+            }
+        } catch (Exception e) {
+
+            return "Error deleting voter with ID " + id;
+        }
+
+    }
+
+    @ResponseBody
+    @PutMapping("/updateVoter/{id}")
+    public String updateVoter(@PathVariable("id") Integer id, @RequestBody Voter updatedVoter) {
+        try {
+            Voter existingVoter = voterDao.findById(id).orElse(null);
+
+            if (existingVoter != null) {
+
+                if (!existingVoter.getNationality().equals(updatedVoter.getNationality())) {
+                    return "Nationality correction not allowed.";
+                }
+
+                existingVoter.setFirstName(updatedVoter.getFirstName());
+                existingVoter.setLastName(updatedVoter.getLastName());
+                existingVoter.setDob(updatedVoter.getDob());
+                existingVoter.setState_id(updatedVoter.getState_id());
+                existingVoter.setPin_code(updatedVoter.getPin_code());
+                existingVoter.setAge(updatedVoter.getAge());
+
+                voterDao.save(existingVoter);
+                return "Voter with ID " + id + " updated successfully";
+            } else {
+                return "Voter with ID " + id + " not found";
+            }
+        } catch (Exception e) {
+            return "Error updating voter with ID " + id;
+        }
+    }
 }
